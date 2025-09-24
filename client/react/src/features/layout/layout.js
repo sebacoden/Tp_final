@@ -13,7 +13,7 @@ export default function Layout () {
     return (
       <main className="layout">
         <Header abrirSidebar={abrirSidebar} />
-        <Sidebar Sidebar estaAbierto={estaAbierto} />
+        <Sidebar estaAbierto={estaAbierto} />
         <Chat />
       </main>
     )

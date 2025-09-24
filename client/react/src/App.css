@@ -113,6 +113,7 @@ header img {
     overflow-y: auto;
     gap: 10px;
     position: relative;
+    align-items: center;
 }
 
 /* Chat Box */
@@ -136,10 +137,10 @@ header img {
     max-width: 2000px;
     margin: 0 auto;
     padding: 10px;
+    align-self: center;
     justify-content: space-between;
     position: fixed;
     bottom: 0;
-    left: 0;
     z-index: 200;
 }
 
@@ -157,6 +158,13 @@ header img {
     font-size: large;
     border: none;
     cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.chat-form button:hover {
+    border: black 2px solid;
+    transform: rotate(270deg);
+    transition: transform 0.5s ease;
 }
 
 /* Mensajes */
