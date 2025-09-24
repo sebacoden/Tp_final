@@ -1,5 +1,4 @@
 export const Header = ({ abrirSidebar }) => {
-
     return (
         <header className="header">
             <img onClick={abrirSidebar} src="/logo.png"></img>
