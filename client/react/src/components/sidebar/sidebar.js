@@ -5,7 +5,8 @@ export const Sidebar = ({ estaAbierto }) => {
         <li><a href="/home">Inicio</a></li>
         <li><a href="/new">Nuevo chat</a></li>
         </ul>
-        <div className="usuario-container">usuario</div>
+        <div className="usuario-container"> 
+            <img src="/icono.png"/> usuario</div>
     </div>
     );
 };

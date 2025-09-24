@@ -44,7 +44,7 @@ header img {
     height: 100%;
 }
 
-/* Main Layout */
+/* Layout */
 .layout {
     flex: 1;
     display: flex;
@@ -92,7 +92,7 @@ header img {
 .usuario-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20%;
     position: absolute;
     bottom: 20px;
     font-weight: bold;
@@ -101,7 +101,7 @@ header img {
 
 .usuario-container img {
     height: 40px;
-    border-radius: 50%;
+    width: auto;
 }
 
 /* Chat Container */
@@ -128,7 +128,7 @@ header img {
     z-index: 100;
 }
 
-/* Chat Form */
+/* La barra donde se escriben mensajes */
 .chat-form {
     display: flex;
     gap: 10px;
@@ -159,7 +159,7 @@ header img {
     cursor: pointer;
 }
 
-/* Messages */
+/* Mensajes */
 .mensaje {
     padding: 10px;
     border-radius: 10px;
@@ -174,4 +174,11 @@ header img {
 .mensaje.asistente {
     background-color: var(--color-primario);
     align-self: flex-start;
+}
+
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 0; /* Me molestaba así que la pagina ahora no tiene scrollbar visible */
+  z-index: -100;
 }
