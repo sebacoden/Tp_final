@@ -1,9 +1,9 @@
 /* Global Reset */
 :root {
-    --color-primario: #426de2;
-    --color-primario-borde: #29489e;
-    --color-secundario: #4FB7B3;
-    --color-fondo: #A8FBD3;
+    --color-primario: #f2539d;
+    --color-primario-borde: #ff0000;
+    --color-secundario: #13f850f8;
+    --color-fondo: #74baed;
 }
 
 html, body {
