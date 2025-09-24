@@ -6,8 +6,20 @@ import { Sidebar } from "../../components/sidebar/sidebar"
 export default function Layout () {
     const [estaAbierto, setEstaAbierto] = useState(false);
 
+
     function abrirSidebar() {
         setEstaAbierto(!estaAbierto);
+    }
+
+    function cerrarSidebar() {
+        setEstaAbierto(false);
+    }
+
+    // Cierra el sidebar al hacer click fuera de él
+    window.onclick = function(event) {
+        if (!event.target.matches('.sidebar') && !event.target.matches('.btn-sidebar')) {
+            cerrarSidebar();
+        }
     }
 
     return (
