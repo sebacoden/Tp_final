@@ -1,6 +1,6 @@
-import { RouteContextProvider } from './data/RouteContextProvider';
+import { RouteContextProvider } from '../data/RouteContextProvider';
 import './App.css';
-import { AppRoutes } from './routes';
+import { AppRoutes } from '../routes';
 
 function App() {
 
