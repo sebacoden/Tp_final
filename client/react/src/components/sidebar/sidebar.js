@@ -1,12 +1,17 @@
 export const Sidebar = ({ estaAbierto }) => {
-    return (
+  return (
     <div className={`sidebar ${estaAbierto ? "open" : ""}`}>
-        <ul>
-        <li><a href="/home">Inicio</a></li>
-        <li><a href="/new">Nuevo chat</a></li>
-        </ul>
-        <div className="usuario-container"> 
-            <img src="/icono.png"/> usuario</div>
+      <ul>
+        <li>
+          <a href="/home">Inicio</a>
+        </li>
+        <li>
+          <a href="/new">Nuevo chat</a>
+        </li>
+      </ul>
+      <div className="usuario-container">
+        <img src="/icono.png" alt="aca va el icono del usuario" /> usuario
+      </div>
     </div>
-    );
+  );
 };

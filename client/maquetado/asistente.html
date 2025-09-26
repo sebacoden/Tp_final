@@ -1,39 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat asistente de Supermercado</title>
-    <link rel="stylesheet" href="asistente.css">
-</head>
-<body>
+    <link rel="stylesheet" href="asistente.css" />
+  </head>
+  <body>
     <header>
-        <img src="logo.png">
-        <h1>Asistente de supermercado</h1>
+      <img src="logo.png" />
+      <h1>Asistente de supermercado</h1>
     </header>
     <main>
-        <nav class="nav-container">
-            <ul>
-                <li><a>Inicio</a></li> <!-- Envia al login -->
-                <li><a>Nuevo chat</a></li> <!-- Limpia el chat ¿Debería haber otra base de datos para los chats? -->
-            </ul>
-            <div class="usuario-container"><img src="logo.png">usuario</div> <!-- Si el cliente entra usando su cuenta aparece este simbolo al fondo del nav, si entra como cliente casual (sin cuenta o contraseña), no aparece nada -->
-        </nav>
-        <section class="chat-container">
-            <div class="chat-box">
-                <div class="mensaje usuario">Quiero saber cuanto pan puedo comprar con $50</div>
-                <div class="mensaje asistente">Como dos cuadraditas</div>
-                <div class="mensaje usuario">Donde está el jabón en polvo</div>
-                <div class="mensaje asistente">Fijate en el pasillo A sección B, apurate que queda muy poco en stock</div>
-                <div class="mensaje usuario">Quiero comprar pan, carne y huevo con $20000</div>
-                <div class="mensaje asistente">CUSTOM TEXT</div>
-            </div>
+      <nav class="nav-container">
+        <ul>
+          <li><a>Inicio</a></li>
+          <!-- Envia al login -->
+          <li><a>Nuevo chat</a></li>
+          <!-- Limpia el chat ¿Debería haber otra base de datos para los chats? -->
+        </ul>
+        <div class="usuario-container"><img src="logo.png" />usuario</div>
+        <!-- Si el cliente entra usando su cuenta aparece este simbolo al fondo del nav, si entra como cliente casual (sin cuenta o contraseña), no aparece nada -->
+      </nav>
+      <section class="chat-container">
+        <div class="chat-box">
+          <div class="mensaje usuario">
+            Quiero saber cuanto pan puedo comprar con $50
+          </div>
+          <div class="mensaje asistente">Como dos cuadraditas</div>
+          <div class="mensaje usuario">Donde está el jabón en polvo</div>
+          <div class="mensaje asistente">
+            Fijate en el pasillo A sección B, apurate que queda muy poco en
+            stock
+          </div>
+          <div class="mensaje usuario">
+            Quiero comprar pan, carne y huevo con $20000
+          </div>
+          <div class="mensaje asistente">CUSTOM TEXT</div>
+        </div>
 
-            <form class="chat-form">
-                <input type="text" placeholder="Escribe tu mensaje...">
-                <button type="submit"> → </button>
-            </form>
-        </section>
+        <form class="chat-form">
+          <input type="text" placeholder="Escribe tu mensaje..." />
+          <button type="submit">→</button>
+        </form>
+      </section>
     </main>
-</body>
+  </body>
 </html>
