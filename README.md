@@ -11,11 +11,9 @@ en el root folder
 
 ### Ejecutar el init_db.py para crear el .db con con una tabla 
 
- ### Generar la api key de gemini (idealmente que cada uno tenga una propia) y crear un archivo .env basado en el .env.example
-
-ejecutar el siguiente comando
+### Ejecutar el siguiente comando
  
  ``` pwsh
     python -m uvicorn api:app --reload --port 8000 
  ```
-esto levanta el front de fasta api en localhost:8000/docs
+esto levanta el front de fastapi en localhost:8000/docs
