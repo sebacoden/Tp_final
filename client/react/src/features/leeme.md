@@ -1,0 +1,1 @@
+Acá están las paginas de la app, de momento solo existen dos: El chat y el login.

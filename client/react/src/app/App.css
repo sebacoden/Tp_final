@@ -5,45 +5,70 @@
   --color-secundario: #13f850f8;
   --color-fondo: #74baed;
 }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 * {
-  font-family: "calibri", sans-serif;
+  font-family: "Calibri", sans-serif;
   font-size: medium;
   box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
+/* Header */
 header {
   background-color: var(--color-primario);
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 20px;
-  padding: 10px;
+  padding: 10px 20px;
   height: 100px;
   width: 100%;
-  border-bottom: var(--color-primario-borde) solid 5px;
-  position: absolute;
+  border-bottom: 5px solid var(--color-primario-borde);
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: 1000;
 }
 
 header h1 {
   font-size: xx-large;
+  color: white;
 }
 
 header img {
   height: 100%;
 }
-
-main {
-  width: 100%;
-  height: 100vh;
-  padding-top: 100px;
-  display: flex;
-  flex-direction: row;
+.btn-sidebar {
+  transition: transform 0.3s ease;
+}
+.btn-sidebar:hover {
+  cursor: pointer;
+  transform: rotate(720deg) scale(120%);
+  transition: transform 1s ease;
 }
 
-.nav-container {
+/* Layout */
+.layout {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  max-height: 100%;
+  width: 100%;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  background-color: var(--color-fondo);
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
   position: fixed;
   top: 0;
   left: 0;
@@ -53,38 +78,29 @@ main {
   padding-top: 100px;
   justify-items: center;
   box-shadow: 2px 0 8px var(--color-primario-borde);
-  z-index: 100;
-  transform: translateX(-95%);
+  z-index: 500;
+  transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
 
-.nav-container:hover {
+.sidebar.open {
   transform: translateX(0);
 }
 
-.nav-container ul {
+.sidebar ul {
   list-style-type: none;
 }
 
-.nav-container ul li :hover {
+.sidebar ul li:hover {
   text-decoration: underline;
   text-shadow: 1px 1px 2px black;
 }
 
-.nav-container * {
+.sidebar * {
   margin: 20px 0;
   color: white;
   text-decoration: none;
   width: 70%;
-}
-
-nav li {
-  list-style: none;
-  margin-bottom: 10px;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 10px;
-  font-weight: bold;
 }
 
 .usuario-container {
@@ -102,39 +118,51 @@ nav li {
   width: auto;
 }
 
+/* Chat Container */
 .chat-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  background-color: var(--color-fondo);
+  padding: 20px;
   overflow-y: auto;
   gap: 10px;
+  position: relative;
+  align-items: center;
 }
 
+/* Chat Box */
 .chat-box {
-  width: 95%;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 100%;
+  flex-grow: 1;
+  padding-bottom: 0;
+  background-color: var(--color-fondo);
+  z-index: 100;
 }
 
+/* La barra donde se escriben mensajes */
 .chat-form {
   display: flex;
   gap: 10px;
-  width: 100%;
-  align-self: center;
+  width: calc(100% - 20px);
+  max-width: 2000px;
+  margin: 0 auto;
   padding: 10px;
+  align-self: center;
   justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  z-index: 200;
 }
 
 .chat-form input {
-  width: 100%;
+  flex: 1;
   border-radius: 10px;
   padding: 10px;
+  border: none;
 }
 
 .chat-form button {
@@ -142,8 +170,18 @@ nav li {
   border-radius: 20px;
   background-color: var(--color-secundario);
   font-size: large;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
+.chat-form button:hover {
+  border: black 2px solid;
+  transform: rotate(-90deg) scale(120%);
+  transition: transform 0.5s ease;
+}
+
+/* Mensajes */
 .mensaje {
   padding: 10px;
   border-radius: 10px;
@@ -158,4 +196,10 @@ nav li {
 .mensaje.asistente {
   background-color: var(--color-primario);
   align-self: flex-start;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 0; /* Me molestaba así que la pagina ahora no tiene scrollbar visible */
+  z-index: -100;
 }

@@ -1,0 +1,1 @@
+Acá están los componentes reusables, como los header, footer, barras de navegación, la UI de usarse.
