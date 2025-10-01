@@ -2,39 +2,31 @@ import { MensajeTarjeta } from "./components/mensajeTarjeta";
 import { Mensaje } from "../../data/mensaje-domain";
 import { chatService } from "../../data/services/chat-service";
 import { useState } from "react";
-import { useOnInit } from "../../data/useOnInIt";
 
 
 export const Chat = () => {
   const [mensajeAEnviar, setMensajeAEnviar] = useState(new Mensaje())
   const [listaMensajes, setListaMensajes] = useState([])
-
-  const obtenerMensajes = async () => {
-    console.log("mensajeAEnviar: ", mensajeAEnviar)
-    chatService.obtenerTodos().then((mensajes) => {
-      setListaMensajes(mensajes.data)
-    }).catch((error) => {
-      console.error("An error has Okuu'd: ", error)
-    })
-  }
-
-
+  const [permiso, setPermiso] = useState(true)
 
   const enviarMensaje = async (e) => {
     e.preventDefault()
-    console.log("mensajeAEnviar: ", mensajeAEnviar)
-    await chatService.enviar(mensajeAEnviar).then((respuesta) => {
-      console.log("Mensaje enviado: ", respuesta.data)
-      limpiarInput()
-      obtenerMensajes()
+    setPermiso(false)
+    chatService.preguntar(mensajeAEnviar.contenido).then((respuesta) => {
+        const nuevoMensajeUsuario = new Mensaje(mensajeAEnviar.contenido, "usuario")
+        const nuevoMensajeBot = new Mensaje(respuesta.data.natural_language_response, "asistente")
+        setListaMensajes([...listaMensajes, nuevoMensajeUsuario, nuevoMensajeBot])
+        limpiarInput()
+        setPermiso(true)
+        console.log("mensajes en el historial: ", listaMensajes)
+        console.log("respuesta del bot: ", respuesta.data)
     }).catch((error) => {
-      console.error(mensajeAEnviar)
+        const nuevoMensajeUsuario = new Mensaje(mensajeAEnviar.contenido, "usuario")
+        const nuevoMensajeBot = new Mensaje(error, "asistente")
+        setListaMensajes([...listaMensajes, nuevoMensajeUsuario, nuevoMensajeBot])
+        setPermiso(true)
     })
   }
-  
-  useOnInit(() => {
-    obtenerMensajes()
-  })
 
   const actualizarInput = (valor) => {
     setMensajeAEnviar({
@@ -57,8 +49,7 @@ export const Chat = () => {
       </div>
       <form className="chat-form" onSubmit={enviarMensaje}>
         <input type="text" placeholder="Escribe tu mensaje..." value={mensajeAEnviar.contenido} onChange={(event) => actualizarInput(event.target.value)}/>
-
-        <button type="submit"> ⟶ </button>
+        <button type="submit"> {permiso ? "⟶" : "X"} </button>
       </form>
     </section>
   );

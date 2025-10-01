@@ -1,6 +1,6 @@
 export class Mensaje {
-  constructor() {
-    this.contenido = '';
-    this.tipo = 'usuario'; // 'usuario' o 'asistente'
+  constructor(contenido = '', tipo = 'usuario') {
+    this.contenido = contenido;
+    this.tipo = tipo; // 'usuario' o 'asistente'
   }
 }
