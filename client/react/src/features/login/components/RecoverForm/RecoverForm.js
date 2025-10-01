@@ -23,9 +23,9 @@ export const RecoverForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setOkMsg('')
-        setBtnMsg('Enviando...')
         const msg = validate()
         if (msg) { setError(msg); return }
+        setBtnMsg('Enviando...')
 
 
 
