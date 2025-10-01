@@ -1,0 +1,1 @@
+export const URL_SERVIDOR_REST = 'http://localhost:9000'
