@@ -1,0 +1,19 @@
+.recover-form{
+}
+
+.recover-form .input-container{
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.recover-form .input-container .form-error{
+    bottom: -45px;
+}
+
+.recover-form .ok-msg{
+    color: #339944;
+    position: absolute;
+    bottom: -50px;
+    width: fit-content;
+    text-align: center;
+}

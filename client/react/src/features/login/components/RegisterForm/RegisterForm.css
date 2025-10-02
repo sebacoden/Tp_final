@@ -1,0 +1,8 @@
+
+.register-form{
+    gap: 40px;
+}
+
+.register-form .input-container{
+    position: relative;
+}
