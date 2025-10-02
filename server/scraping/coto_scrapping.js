@@ -1,5 +1,6 @@
 import { chromium } from "playwright";
 import cliProgress from "cli-progress";
+import fs from "fs";
 
 const coto_URL = "https://www.cotodigital.com.ar/sitios/cdigi/categoria%3FNf%3Dproduct.endDate%257CGTEQ%2B1.7584128E12%257C%257Cproduct.endDate%257CGTEQ%2B1.663632E12%257C%257Cproduct.startDate%257CLTEQ%2B1.663632E12%257C%257Cproduct.startDate%257CLTEQ%2B1.7584128E12&No%3D0&Nr%3DAND%2528product.language%253Aespa%25C3%25B1ol%252Cproduct.sDisp_200%253A1004%252COR%2528product.siteId%253ACotoDigital%2529%2529&Nrpp%3D24&Ns%3Dproduct.TOTALDEVENTAS%257C1%257C%257Csku.activePrice%257C0&format%3Djson"
 
@@ -109,6 +110,11 @@ function parseProduct(raw) {
     return product;
 }
 
-console.log(await getCotoProducts())
+async function saveProductsToFile() {
+    const products = await getCotoProducts();
+    fs.writeFileSync("./server/scraping/productosCOTO.json", JSON.stringify(products, null, 2), "utf-8");
+    console.log(`✅ Archivo productosCOTO.json generado con ${products.length} productos`);
+}
+await saveProductsToFile()
 
 await browser.close();
