@@ -13,7 +13,7 @@ const page = await context.newPage();
 
 async function getCotoProductsAmmount() {
 	await page.goto(coto_URL);
-	
+
 	let ammount = ""
 	let response = ""
 	try {
@@ -39,53 +39,66 @@ async function getCotoProductsAmmount() {
 	return +ammount;
 }
 
-async function getCotoProducts(productsAmmout) {
-	const allProductsURL = `https://www.cotodigital.com.ar/sitios/cdigi/categoria%3FNf%3Dproduct.endDate%257CGTEQ%2B1.7584128E12%257C%257Cproduct.endDate%257CGTEQ%2B1.663632E12%257C%257Cproduct.startDate%257CLTEQ%2B1.663632E12%257C%257Cproduct.startDate%257CLTEQ%2B1.7584128E12&No%3D0&Nr%3DAND%2528product.language%253Aespa%25C3%25B1ol%252Cproduct.sDisp_200%253A1004%252COR%2528product.siteId%253ACotoDigital%2529%2529&Nrpp%3D${productsAmmout}&Ns%3Dproduct.TOTALDEVENTAS%257C1%257C%257Csku.activePrice%257C0&format%3Djson`
-	await page.goto(allProductsURL)
+async function getCotoProducts(productIndexStart, productIndexEnd) {
+	const ammount = productIndexEnd - productIndexStart;
 
-	const selector = "div.productos.row > *"
-	let result = await page.locator(selector).allInnerTexts()
+	const productsURL = `https://www.cotodigital.com.ar/sitios/cdigi/categoria%3FNf%3Dproduct.endDate%257CGTEQ%2B1.7584128E12%257C%257Cproduct.endDate%257CGTEQ%2B1.663632E12%257C%257Cproduct.startDate%257CLTEQ%2B1.663632E12%257C%257Cproduct.startDate%257CLTEQ%2B1.7584128E12&No=${productIndexStart}&Nr%3DAND%2528product.language%253Aespa%25C3%25B1ol%252Cproduct.sDisp_200%253A1004%252COR%2528product.siteId%253ACotoDigital%2529%2529&Nrpp=${ammount}&Ns%3Dproduct.TOTALDEVENTAS%257C1%257C%257Csku.activePrice%257C0&format%3Djson`;
 
-	const parsed = result.map(parseProduct);
-	console.log(JSON.stringify(parsed, null, 2));
+	await page.goto(productsURL);
+
+	const selector = "catalogue-product";
+	let result = await page.locator(selector).allInnerTexts();
 
 	return result;
 }
+
 function parseProduct(raw) {
-  const lines = raw.split("\n").map(l => l.trim()).filter(Boolean);
+	const lines = raw.split("\n").map(l => l.trim()).filter(Boolean);
 
-  let product = {
-    title: null,
-    price: null,
-    regularPrice: null,
-    taxFreePrice: null,
-    pricePerUnit: null,
-    promo: []
-  };
+	let product = {
+		title: null,
+		price: null,
+		regularPrice: null,
+		taxFreePrice: null,
+		pricePerUnit: null,
+		promo: []
+	};
 
-  for (let line of lines) {
-    if (line.startsWith("$")) {
-      // Precio principal (la primera vez que aparece un $)
-      if (!product.price) {
-        product.price = line.replace("$", "").trim();
-      }
-    } else if (/Precio regular/i.test(line)) {
-      product.regularPrice = line.replace(/[^0-9.,]/g, "");
-    } else if (/Precio sin impuestos/i.test(line)) {
-      product.taxFreePrice = line.replace(/[^0-9.,]/g, "");
-    } else if (/Precio por/i.test(line)) {
-      product.pricePerUnit = line.replace(/[^0-9.,]/g, "");
-    } else if (/DTO|LLEVANDO|PRECIO CON|NO ACUMULABLE/i.test(line)) {
-      product.promo.push(line);
-    } else if (!product.title) {
-      // El primer texto que no sea precio ni promo lo tomamos como título
-      product.title = line;
-    }
-  }
+	for (let line of lines) {
+		if (line.startsWith("$")) {
+			// Precio principal (la primera vez que aparece un $)
+			if (!product.price) {
+				product.price = line.replace("$", "").trim();
+			}
+		} else if (/Precio regular/i.test(line)) {
+			product.regularPrice = line.replace(/[^0-9.,]/g, "");
+		} else if (/Precio sin impuestos/i.test(line)) {
+			product.taxFreePrice = line.replace(/[^0-9.,]/g, "");
+		} else if (/Precio por/i.test(line)) {
+			product.pricePerUnit = line.replace(/[^0-9.,]/g, "");
+		} else if (/DTO|LLEVANDO|PRECIO CON|NO ACUMULABLE/i.test(line)) {
+			product.promo.push(line);
+		} else if (!product.title) {
+			// El primer texto que no sea precio ni promo lo tomamos como título
+			product.title = line;
+		}
+	}
 
-  return product;
+	return product;
 }
 
+async function getAllCotoProducts(){
+	/* const chunkSize = 499
+	const fetchProductsAmmount = 1200	// await getCotoProductsAmmount()
+	let currentChunk = []
+	let productsList = []
+ */
+	return await getCotoProducts(0, 499)
+}
 
-console.log(await getCotoProducts(20))	// Do with 5 elements, then add await getCotoProductsAmmount()
+let productsList = await getAllCotoProducts()
+
+console.log(productsList)
+console.log("Cantidad de productos: ", productsList.length)
+
 await browser.close();

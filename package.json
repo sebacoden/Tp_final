@@ -2,7 +2,8 @@
 	"type": "module",
 	"dependencies": {
 		"node-fetch": "^3.3.2",
-		"playwright": "^1.55.0"
+		"playwright": "^1.55.0",
+		"puppeteer": "^24.22.3"
 	},
 	"devDependencies": {
 		"@types/node": "^24.5.2"
