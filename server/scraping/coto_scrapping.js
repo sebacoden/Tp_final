@@ -112,7 +112,7 @@ function parseProduct(raw) {
 
 async function saveProductsToFile() {
     const products = await getCotoProducts();
-    fs.writeFileSync("./productosCOTO.json", JSON.stringify(products, null, 2), "utf-8");
+    fs.writeFileSync("./server/scraping/productosCOTO.json", JSON.stringify(products, null, 2), "utf-8");
     console.log(`✅ Archivo productosCOTO.json generado con ${products.length} productos`);
 }
 await saveProductsToFile()
