@@ -1,0 +1,96 @@
+.form-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70%;
+    gap: 30px;
+    min-width: 450px;
+    /* background-color: var(--color-secundario); */
+    padding: 20px;
+    border-radius: 30px;
+}
+
+.form-container h2{
+    color: #333;
+    font-size: 40px;
+}
+
+.form-container .input-container .form-error{
+    color: #f44;
+    position: absolute;
+    bottom: -30px;
+}
+
+.form-container .form-error.is-visible {
+  opacity: 1;
+}
+
+.form-container .input-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    gap: 10px;
+}
+
+.form-container .input-container label{
+    align-self: flex-start;
+    margin-left: 15px;
+}
+
+.form-container .input-container input{
+    /* background-color: var(--color-primario); */
+    /* border: .5px solid var(--color-primario-borde); */
+    border: .5px solid #333;
+    width: 100%;
+    height: 50px;
+    border-radius: 30px;
+    padding: 15px;
+}
+
+.form-container .form-btn{
+    width: 90%;
+    background-color: #333;
+    color: white;
+    min-height: 50px;
+    border-radius: 30px;
+    cursor: pointer;
+    border: none;
+}
+
+.form-container .form-btn:hover{
+    background-color: #555;
+}
+
+.form-container  .auth-links{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+}
+
+.form-container .auth-links .link{
+    color: #333;
+}
+
+.form-container .auth-links .link:hover{
+    color: #000;
+}
+
+.form-container .input-container .pass-btn{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    height: fit-content;
+}
+
+.form-container .btn-disabled{
+    background-color: #555;
+    cursor: not-allowed;
+}
