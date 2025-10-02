@@ -20,7 +20,7 @@ app.add_middleware(
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "../DB/mi_base.db")
+DB_PATH = os.path.join(BASE_DIR, "../DB/productos.db")
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
