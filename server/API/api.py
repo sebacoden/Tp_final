@@ -4,6 +4,9 @@ import sqlite3
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+import re
+from fastapi import HTTPException
+
 
 load_dotenv()
 
@@ -44,54 +47,46 @@ def run_sql(query: str = Query(..., description="Consulta SQL a ejecutar")):
 @app.get("/ask")
 def ask(question: str):
     conn = get_db_connection()
-    
+    model = genai.GenerativeModel("gemini-2.5-flash")
+
     try:
-        # 1. Obtener el esquema de la base
+        # 1. Obtener esquema
         cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tablas = [row["name"] for row in cursor.fetchall()]
         schema = {}
         for t in tablas:
             cols = conn.execute(f"PRAGMA table_info({t});").fetchall()
             schema[t] = [c[1] for c in cols]
-        
-        # generar la consulta SQL con Gemini
-        prompt_sql = f"""
-        Eres un asistente que responde preguntas basadas en SQLite.
-        Esquema de la base: {schema}
-        Pregunta: {question}
-        Solo devuelve la consulta SQL correcta, sin explicaciones.
+
+        # 2. Obtener todos los datos de todas las tablas
+        all_data = {}
+        for t in tablas:
+            try:
+                cursor = conn.execute(f"SELECT * FROM {t};")
+                rows = cursor.fetchall()
+                all_data[t] = [dict(row) for row in rows]
+            except sqlite3.OperationalError:
+                all_data[t] = []
+
+        # 3. Prompt para Gemini: combinar datos + conocimiento general
+        prompt = f"""
+        El usuario preguntó: "{question}"
+
+        Aquí están todos los datos disponibles de la base de datos:
+        {all_data}
+
+        Genera una respuesta útil, clara y amigable, basada en los datos existentes y, si es necesario, complementa con conocimiento general.
+        Puedes hacer recomendaciones, sugerencias o comparaciones entre productos.
         """
-        model = genai.GenerativeModel("gemini-2.5-flash")
-        response_sql = model.generate_content(prompt_sql)
-        sql_query = response_sql.text.strip()
-        
-        if sql_query.startswith("```sql"):
-            sql_query = sql_query.replace("```sql", "").strip()
-        if sql_query.endswith("```"):
-            sql_query = sql_query.replace("```", "").strip()
-        
-        # ejecutar la SQL generada
-        cursor = conn.execute(sql_query)
-        rows = cursor.fetchall()
-        data = [dict(row) for row in rows]
 
-        # generar la respuesta natural con Gemini
-        prompt_natural = f"""
-        Basado en la siguiente pregunta y el resultado de la base de datos,
-        genera una respuesta en lenguaje natural.
+        response = model.generate_content(prompt)
+        answer = response.text.strip()
 
-        Pregunta: {question}
-        Datos de la base: {data}
+        return {
+            "query": None,
+            "results": all_data,
+            "natural_language_response": answer
+        }
 
-        Responde de manera concisa y amigable.
-        """
-        response_natural = model.generate_content(prompt_natural)
-        final_answer = response_natural.text.strip()
-        
-        return {"query": sql_query, "results": data, "natural_language_response": final_answer}
-        
-    except Exception as e:
-        return {"error": str(e)}
-        
     finally:
         conn.close()
