@@ -177,7 +177,7 @@ header img {
 
 .chat-form button:hover {
   border: black 2px solid;
-  transform: rotate(-90deg) scale(120%);
+  transform: scale(120%);
   transition: transform 0.5s ease;
 }
 
