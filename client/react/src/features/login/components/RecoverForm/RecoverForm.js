@@ -47,13 +47,13 @@ export const RecoverForm = () => {
             <h2>Recuperar contraseña</h2>
             <div className='input-container'>
                 <label htmlFor='email'>Email</label>
-                <input type='email' id='email' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value); clearError() }} required />
-                <p id="email-error" className={`form-error ${error ? 'is-visible' : ''}`}>{error || '\u00A0'}</p>
-                <p id="ok-msg" className={`ok-msg ${okMsg ? 'is-visible' : ''}`}>{okMsg || '\u00A0'}</p>  
+                <input type='email' id='email' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value); clearError() }} data-cy='recover-email' required />
+                <p id="email-error" className={`form-error ${error ? 'is-visible' : ''}`} data-cy='recover-error'>{error || '\u00A0'}</p>
+                <p id="ok-msg" className={`ok-msg ${okMsg ? 'is-visible' : ''}`} data-cy='recover-success'>{okMsg || '\u00A0'}</p>  
             </div>
-            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} disabled={submitting}>{btnMsg}</button>
+            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} data-cy='recover-submit' disabled={submitting}>{btnMsg}</button>
             <div className='auth-links'>
-                <Link className='link' to='/auth/login' replace>Iniciar sesión</Link>
+                <Link className='link' to='/auth/login' data-cy='recover-back-link' replace>Iniciar sesión</Link>
             </div>
         </form>
     )

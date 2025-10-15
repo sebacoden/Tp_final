@@ -66,28 +66,28 @@ export const RegisterForm = ({onSuccess}) =>{
             <h2>Crear cuenta</h2>
             <div className='input-container'>
                 <label htmlFor='name'>Nombre</label>
-                <input type='text' id='name' placeholder='Nombre' value={name} onChange={ (e) => {setName(e.target.value)}} required />
+                <input type='text' id='name' placeholder='Nombre' value={name} onChange={ (e) => {setName(e.target.value)}} data-cy='register-name' required />
             </div>
             <div className='input-container'>
                 <label htmlFor='email'>Email</label>
-                <input type='email' id='email' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value); if (errors.email) clearFieldError('email') }} required />
-                <p id="email-error" className={`form-error email-error ${errors.email ? 'is-visible' : ''}`}>{errors.email || '\u00A0'}</p> 
+                <input type='email' id='email' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value); if (errors.email) clearFieldError('email') }} data-cy='register-email' required />
+                <p id="email-error" className={`form-error email-error ${errors.email ? 'is-visible' : ''}` } data-cy='register-error-email'>{errors.email || '\u00A0'}</p> 
             </div>
             <div className='input-container'>
                 <label htmlFor='password'>Contraseña</label>
-                <input type={showPwd ? 'text':'password'} id='password' placeholder='Contraseña' value={password} onChange={(e) => { setPassword(e.target.value); if (errors.pwd) clearFieldError('pwd') }} required />
+                <input type={showPwd ? 'text':'password'} id='password' placeholder='Contraseña' value={password} onChange={(e) => { setPassword(e.target.value); if (errors.pwd) clearFieldError('pwd') }} data-cy='register-password' required />
                 <button type='button' className='pass-btn' tabIndex={-1} onClick={handleShowPwd}>{showPwd ? '🙉':'🙈'}</button>
-                <p id="password-error" className={`form-error password-error ${errors.pwd ? 'errorVisible' : ''}`}> {errors.pwd || '\u00A0'} </p>
+                <p id="password-error" className={`form-error password-error ${errors.pwd ? 'is-visible' : ''}`} data-cy='register-error-pwd'> {errors.pwd || '\u00A0'} </p>
             </div>
             <div className='input-container'>
                 <label htmlFor='confirmPass'>Confirmar contraseña</label>
-                <input type={showPwd ? 'text':'password'} id='confirmPass' placeholder='Confirmar contraseña' value={password2} onChange={(e) => { setPassword2(e.target.value); if (errors.pwd2) clearFieldError('pwd2') }} required />
+                <input type={showPwd ? 'text':'password'} id='confirmPass' placeholder='Confirmar contraseña' value={password2} onChange={(e) => { setPassword2(e.target.value); if (errors.pwd2) clearFieldError('pwd2') }} data-cy='register-password2' required />
                 <button type='button' className='pass-btn' tabIndex={-1} onClick={handleShowPwd}>{showPwd ? '🙉':'🙈'}</button>
-                <p id="password2-error" className={`form-error password2-error ${errors.pwd2 ? 'errorVisible' : ''}`} >{errors.pwd2 || '\u00A0'}</p>
+                <p id="password2-error" className={`form-error password2-error ${errors.pwd2 ? 'is-visible' : ''}`} data-cy='register-error-pwd2'>{errors.pwd2 || '\u00A0'}</p>
             </div>
-            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} disabled={submitting}>{submitting ? 'Procesando...' : 'Registrarse'}</button>
+            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} disabled={submitting} data-cy='register-submit'>{submitting ? 'Procesando...' : 'Registrarse'}</button>
             <div className='auth-links'>
-                <Link className='link' to='/auth/login' replace>Ya tengo cuenta</Link>
+                <Link className='link' to='/auth/login' data-cy='register-back-link' replace>Ya tengo cuenta</Link>
             </div>
         </form>
     )
