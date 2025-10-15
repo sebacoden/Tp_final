@@ -7,6 +7,7 @@
 		"puppeteer": "^24.22.3"
 	},
 	"devDependencies": {
-		"@types/node": "^24.5.2"
+		"@types/node": "^24.5.2",
+		"cypress": "^15.4.0"
 	}
 }
