@@ -1,7 +1,7 @@
 import sqlite3
 
 # Crear (o conectar si ya existe) la base
-conn = sqlite3.connect("server/DB/mi_base.db")
+conn = sqlite3.connect("server/DB/productos.db")
 cursor = conn.cursor()
 
 # Crear tabla de productos
