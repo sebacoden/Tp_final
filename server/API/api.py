@@ -2,16 +2,23 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 import google.generativeai as genai
-import os
+import os, random
 from dotenv import load_dotenv
 import re
 from fastapi import HTTPException
 from pydantic import BaseModel
 
+def get_gemini_key_from_default(): #Esta es la opcion que ya existia
+    return os.getenv("GEMINI_API_KEY")
+
+def get_gemini_key_from_pool(): #Esta es una posible solución. Toma una key al azar de un pool en el .env
+    keys = os.getenv("GEMINI_KEYS").split(",")  #Reduce el limite de una sola key al separar la carga entre varias
+    return random.choice(keys)                  #Solo funciona porque es una app chica y pocos vamos a estar usandola al mismo tiempo
 
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+selected_key = get_gemini_key_from_pool()
+genai.configure(api_key=selected_key)
 
 app = FastAPI()
 
