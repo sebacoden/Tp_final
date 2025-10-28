@@ -76,11 +76,13 @@ def ask(question: str):
         Genera una consulta SQL que responda a la siguiente pregunta:
         "{question}"
 
-        Instrucciones CLAVE para generar la SQL:
-            1. Siempre que la pregunta del usuario implique buscar un producto por su nombre o parte de su nombre, debes usar el operador **LIKE** y rodear el valor con el comodín **%** (por ejemplo: WHERE nombre LIKE '%valor%').
-            2. La consulta debe devolver solo las columnas necesarias.
-            3. El motor de base de datos es SQLite.
-            4. Pasa la query en crudo, sin bloques de código Markdown ni comentarios.
+        Instrucciones CLAVE para generar la SQL (SQLite):
+            1. Cuando la pregunta busca el producto **"más caro"**, la consulta debe ordenar por **precio_base** de forma descendente (`ORDER BY precio_base DESC`).
+            2. Cuando la pregunta busca el producto con el **"mayor descuento"**, la consulta debe ordenar por el cálculo del porcentaje de descuento de forma descendente (`ORDER BY porcentaje_descuento DESC`).
+            3. Siempre incluye la condición `WHERE pp.precio_base > pp.precio_final` para filtrar productos sin descuento.
+            4. Para búsquedas de nombres, usa **LIKE** con comodines (`%`).
+            5. La consulta debe devolver solo las columnas necesarias.
+            6. Pasa la query en crudo, sin bloques de código Markdown ni comentarios.
         """
         # 3️⃣ Gemini genera la consulta SQL
         response_sql = model.generate_content(prompt_sql)
