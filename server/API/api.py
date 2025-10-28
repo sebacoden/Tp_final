@@ -58,7 +58,7 @@ def ask(question: str):
     model = genai.GenerativeModel("gemini-2.5-flash")
 
     try:
-        # 1. Obtener esquema
+        # 1️⃣ Obtener estructura de la DB (tablas y columnas)
         cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tablas = [row["name"] for row in cursor.fetchall()]
         schema = {}
@@ -66,33 +66,57 @@ def ask(question: str):
             cols = conn.execute(f"PRAGMA table_info({t});").fetchall()
             schema[t] = [c[1] for c in cols]
 
-        # 2. Obtener todos los datos de todas las tablas
-        all_data = {}
-        for t in tablas:
-            try:
-                cursor = conn.execute(f"SELECT * FROM {t};")
-                rows = cursor.fetchall()
-                all_data[t] = [dict(row) for row in rows]
-            except sqlite3.OperationalError:
-                all_data[t] = []
+        # 2️⃣ Preparar prompt para que Gemini genere la SQL
+        schema_str = "\n".join([f"{t}({', '.join(cols)})" for t, cols in schema.items()])
+        prompt_sql = f"""
+        Eres un asistente que ayuda a generar consultas SQL para responder preguntas.
+        Aquí está la estructura de la base de datos:
+        {schema_str}
 
-        # 3. Prompt para Gemini: combinar datos + conocimiento general
-        prompt = f"""
-        El usuario preguntó: "{question}"
+        Genera una consulta SQL que responda a la siguiente pregunta:
+        "{question}"
 
-        Aquí están todos los datos disponibles de la base de datos:
-        {all_data}
-
-        Genera una respuesta útil, clara y amigable, basada en los datos existentes y, si es necesario, complementa con conocimiento general.
-        Puedes hacer recomendaciones, sugerencias o comparaciones entre productos.
+        Instrucciones CLAVE para generar la SQL:
+            1. Siempre que la pregunta del usuario implique buscar un producto por su nombre o parte de su nombre, debes usar el operador **LIKE** y rodear el valor con el comodín **%** (por ejemplo: WHERE nombre LIKE '%valor%').
+            2. La consulta debe devolver solo las columnas necesarias.
+            3. El motor de base de datos es SQLite.
+            4. Pasa la query en crudo, sin bloques de código Markdown ni comentarios.
         """
+        # 3️⃣ Gemini genera la consulta SQL
+        response_sql = model.generate_content(prompt_sql)
+        sql_query = response_sql.text.strip()
+        sql_query = sql_query.replace('```sql', '').replace('```', '').strip()
+        sql_query = re.sub(r'--.*', '', sql_query).strip()
 
-        response = model.generate_content(prompt)
-        answer = response.text.strip()
+
+        # 4️⃣ Ejecutar la consulta SQL generada
+        try:
+            cursor = conn.execute(sql_query)
+            rows = cursor.fetchall()
+            results = [dict(row) for row in rows]
+        except sqlite3.Error as e:
+            results = []
+            sql_query += f" -- ERROR: {str(e)}"
+
+        # 5️⃣ Generar prompt para la respuesta en lenguaje natural
+        prompt_nl = f"""
+        El usuario preguntó: "{question}"
+        Los resultados de la base de datos son:
+        {results}
+
+        Instrucciones:
+        - Responde con actitud neutral y clara.
+        - Busca en base al nombre del producto, no categoria.
+        - Responde de manera clara y amigable.
+        - Adapta la longitud según la pregunta.
+        - No uses markdown ni **.
+        """
+        response_nl = model.generate_content(prompt_nl)
+        answer = response_nl.text.strip()
 
         return {
-            "query": None,
-            "results": all_data,
+            "query": sql_query,
+            "results": results,
             "natural_language_response": answer
         }
 
