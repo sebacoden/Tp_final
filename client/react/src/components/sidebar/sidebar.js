@@ -3,7 +3,7 @@ export const Sidebar = ({ estaAbierto }) => {
     <div className={`sidebar ${estaAbierto ? "open" : ""}`}>
       <ul>
         <li>
-          <a href="/home">Inicio</a>
+          <a href="/auth/login">Iniciar sesión</a>
         </li>
         <li>
           <a href="/new">Nuevo chat</a>
