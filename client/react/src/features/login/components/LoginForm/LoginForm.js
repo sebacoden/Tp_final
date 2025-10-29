@@ -1,4 +1,4 @@
-import { use, useState } from 'react'
+import { useState } from 'react'
 import './LoginForm.css'
 import '../../shared/FormStyle.css'
 import { Link } from 'react-router-dom'
@@ -10,8 +10,8 @@ export const LoginForm = ({ onSuccess }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
-    const [showPwd,setShowPwd] = useState(false)
-    const [submitting,setSubmitting] = useState('')
+    const [showPwd, setShowPwd] = useState(false)
+    const [submitting, setSubmitting] = useState('')
 
     const testUser = {
         email: 'test@email.com',
@@ -23,14 +23,14 @@ export const LoginForm = ({ onSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(email !== testUser.email || password !== testUser.password) {setError('Email o contraseña incorrectos');return}
-        try{
+        if (email !== testUser.email || password !== testUser.password) { setError('Email o contraseña incorrectos'); return }
+        try {
             setSubmitting(true)
             //llamada al backend
             await sleep(2000);
             onSuccess?.()
-        } 
-        finally{
+        }
+        finally {
             setSubmitting(false)
         }
     }
@@ -48,18 +48,18 @@ export const LoginForm = ({ onSuccess }) => {
             <h2>Iniciar Sesión</h2>
             <div className='input-container'>
                 <label htmlFor='email'>Email</label>
-                <input type='email' id='email' placeholder='Email' value={email} onChange={handleFieldInput(setEmail)} required />
+                <input type='email' id='email' placeholder='Email' value={email} onChange={handleFieldInput(setEmail)} data-cy="login-email" required />
             </div>
             <div className='input-container'>
                 <label htmlFor='password'>Contraseña</label>
-                <input type={showPwd ? 'text':'password'} id='password' placeholder='Contraseña' value={password} onChange={handleFieldInput(setPassword)} required />
-                <button type='button' className='pass-btn' tabIndex={-1} onClick={handleShowPwd}>{showPwd ? '🙉':'🙈'}</button>
-                <p id="form-error" className={`form-error ${error ? 'is-visible' : ''}`}>{error || '\u00A0'}</p>
+                <input type={showPwd ? 'text' : 'password'} id='password' placeholder='Contraseña' value={password} onChange={handleFieldInput(setPassword)} data-cy="login-password" required />
+                <button type='button' className='pass-btn' tabIndex={-1} onClick={handleShowPwd}>{showPwd ? '🙉' : '🙈'} </button>
+                <p id="form-error" data-cy="login-error" className={`form-error ${error ? 'is-visible' : ''}`}>{error || '\u00A0'}</p>
             </div>
-            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} disabled={submitting}>{submitting ? 'Ingresando...' : 'Ingresar'}</button>
+            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} disabled={submitting} data-cy="login-submit">{submitting ? 'Ingresando...' : 'Ingresar'}</button>
             <div className='auth-links'>
-                <Link className='link' to='/auth/recover'>¿Olvidaste tu contraseña?</Link>
-                <Link className='link' to='/auth/register'>Crear cuenta</Link>
+                <Link className='link' to='/auth/recover' data-cy='login-recover-link'>¿Olvidaste tu contraseña?</Link>
+                <Link className='link' to='/auth/register' data-cy='login-register-link'>Crear cuenta</Link>
             </div>
         </form>
     )
