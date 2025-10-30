@@ -38,13 +38,13 @@ export const Chat = () => {
 
   return (
     <section className="chat-container">
-      <div className="chat-box">
+      <div className="chat-box" data-cy="caja-mensajes">
         {listaMensajes.map((m) => (
           <MensajeTarjeta mensaje={m} />
         ))}
       </div>
       <form className="chat-form" onSubmit={enviarMensaje}>
-        <input type="text" placeholder="Escribe tu mensaje..." value={mensajeAEnviar.contenido} onChange={(event) => actualizarInput(event.target.value)} disabled={!esperarRespuesta} />
+        <input type="text" placeholder="Escribe tu mensaje..." value={mensajeAEnviar.contenido} onChange={(event) => actualizarInput(event.target.value)} disabled={!esperarRespuesta} data-cy="mensaje-input"/>
         <button type="submit"> {esperarRespuesta ? "⟶" : "x"} </button>
       </form>
     </section>
