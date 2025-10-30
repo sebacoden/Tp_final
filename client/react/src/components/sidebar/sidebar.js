@@ -1,11 +1,11 @@
 export const Sidebar = ({ estaAbierto }) => {
   return (
-    <div className={`sidebar ${estaAbierto ? "open" : ""}`}>
+    <div className={`sidebar ${estaAbierto ? "open" : ""}`} data-cy="sidebar">
       <ul>
-        <li>
-          <a href="/home">Inicio</a>
+        <li data-cy="iniciar-sesion">
+          <a href="/auth/login">Iniciar sesión</a>
         </li>
-        <li>
+        <li data-cy="abrir-nuevo-chat">
           <a href="/new">Nuevo chat</a>
         </li>
       </ul>

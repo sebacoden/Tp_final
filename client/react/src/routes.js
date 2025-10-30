@@ -4,7 +4,7 @@ import { LoginPage } from "./features/login/LoginPage";
 
 export const AppRoutes = () =>
   <Routes>
-    <Route path="/" element={<Layout />} />
+    <Route path="/chat" element={<Layout />} />
     <Route path="/auth/:mode" element={<LoginPage/>}/>
-    <Route path="*" element={<Navigate to="/" replace/>}/>
+    <Route path="*" element={<Navigate to="/chat" replace/>}/>
   </Routes>
