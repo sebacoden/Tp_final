@@ -22,12 +22,12 @@ describe('Auth - Recover', () => {
   })
 
   it('con email válido muestra mensaje OK', () => {
-    cy.get('[data-cy="recover-email"]').clear().type('alguien@mail.com')
+    cy.get('[data-cy="recover-email"]').clear().type('test@email.com')
     cy.get('[data-cy="recover-submit"]').click()
 
     cy.get('[data-cy="recover-success"]')
       .should('be.visible')
-      .and('contain', 'Si el email está registrado')
+      .and('contain', 'Se ha enviado un enlace para restablecer su contraseña')
   })
 
   it('click en "Iniciar sesión" redirige al login', () => {

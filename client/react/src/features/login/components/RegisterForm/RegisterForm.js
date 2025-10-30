@@ -2,6 +2,8 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import '../../shared/FormStyle.css'
 import './RegisterForm.css'
+import { registerService } from '../../../../data/services/auth-service'
+import { useAuth } from '../../../../data/AuthContext'
 
 
 export const RegisterForm = ({onSuccess}) =>{
@@ -20,17 +22,13 @@ export const RegisterForm = ({onSuccess}) =>{
         pwd2:''
     })
 
-    // para testear validaciones
-    const testEmail = 'test@email.com'
-
     const clearFieldError = (field) => setErrors((e) => ({ ...e, [field]: '' }))
 
     const validate = () => {
         const next ={email:'',pwd:'',pwd2:''}
         if(!email) next.email = 'El email es obligatorio'
         else if (!/^\S+@\S+\.\S+$/.test(email)) next.email = 'Ingresá un email válido'
-        else if (email === testEmail) next.email = 'El email ingresado ya se encuentra registrado'
-
+        
         if(!password) next.pwd = 'La contraseña es obligatoria'
         else if(password.length < 8) next.pwd = 'Debe tener al menos 8 caracteres'
 
@@ -41,20 +39,20 @@ export const RegisterForm = ({onSuccess}) =>{
         return Object.values(next).every((msg)=>msg==='')
     }
 
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+    const { login } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         if(!validate()) return
 
-        try{
+        try {
             setSubmitting(true)
-            //llamada al backend
-            await sleep(2000);
+            await registerService(email, name, password)
+            login({ email, name }) // Iniciar sesión automáticamente después del registro
             onSuccess?.()
-        }
-        finally{
+        } catch (err) {
+            setErrors(prev => ({ ...prev, email: err.message }))
+        } finally {
             setSubmitting(false)
         }
     }

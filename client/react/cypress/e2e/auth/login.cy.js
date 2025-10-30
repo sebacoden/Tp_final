@@ -5,7 +5,7 @@ describe('Auth - Login', () => {
 
   it('credenciales validas redirigen a /', () => {
     cy.get('[data-cy="login-email"]').type('test@email.com')
-    cy.get('[data-cy="login-password"]').type('1234')
+    cy.get('[data-cy="login-password"]').type('test1234')
     cy.get('[data-cy="login-submit"]').click()
     cy.url().should('eq', `${Cypress.config().baseUrl}/`)
   })

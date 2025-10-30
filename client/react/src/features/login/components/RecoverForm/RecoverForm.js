@@ -2,6 +2,7 @@ import { useState } from 'react'
 import '../../shared/FormStyle.css'
 import './RecoverForm.css'
 import { Link } from 'react-router-dom'
+import { verifyEmailService } from '../../../../data/services/auth-service'
 
 export const RecoverForm = () => {
     const [email, setEmail] = useState('')
@@ -10,8 +11,6 @@ export const RecoverForm = () => {
     const [okMsg, setOkMsg] = useState('')
     const [btnMsg, setBtnMsg] = useState('Enviar')
 
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms))
-    
     const clearError = () => error && setError('')
 
     const validate = () => {
@@ -25,20 +24,19 @@ export const RecoverForm = () => {
         setOkMsg('')
         const msg = validate()
         if (msg) { setError(msg); return }
-        setBtnMsg('Enviando...')
-
-
+        setBtnMsg('Verificando...')
 
         try {
             setSubmitting(true)
-            // llamada al backend
-            await sleep(1200)
-
-            setOkMsg('Si el email está registrado, enviaremos un enlace para restablecer su contraseña')
+            await verifyEmailService(email)
+            setOkMsg('Se ha enviado un enlace para restablecer su contraseña')
             setError('')
-
-        } finally {
             setBtnMsg('Enviado')
+        } catch (err) {
+            setError(err.message)
+            setBtnMsg('Enviar')
+        } finally {
+            setSubmitting(false)
         }
     };
 
