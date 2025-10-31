@@ -76,7 +76,7 @@ header img {
   width: 250px;
   background-color: var(--color-primario);
   padding-top: 100px;
-  padding-left: 15px;
+  padding-inline: 15px;
   justify-items: center;
   box-shadow: 2px 0 8px var(--color-primario-borde);
   z-index: 500;
@@ -102,39 +102,6 @@ header img {
   color: white;
   text-decoration: none;
   width: 70%;
-}
-
-.usuario-container > div{
-  display: flex;
-  align-items: center;
-  gap: 20%;
-  position: absolute;
-  bottom: 20px;
-  font-weight: bold;
-  font-size: large;
-}
-
-.usuario-container img {
-  height: 40px;
-  width: auto;
-}
-
-.usuario-container .link-login:hover{
-  text-decoration: underline;
-  text-shadow: 1px 1px 2px black;
-}
-
-.usuario-container .boton-cerrar-sesion {
-  padding: 5px 10px;
-  height: 60px;
-  border-radius: 10px;
-  background-color: var(--color-secundario);
-  border: none;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /* Chat Container */
