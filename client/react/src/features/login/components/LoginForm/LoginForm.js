@@ -2,6 +2,8 @@ import { useState } from 'react'
 import './LoginForm.css'
 import '../../shared/FormStyle.css'
 import { Link } from 'react-router-dom'
+import { loginService } from '../../../../data/services/auth-service'
+import { useAuth } from '../../../../data/AuthContext'
 
 export const LoginForm = ({ onSuccess }) => {
 
@@ -13,24 +15,19 @@ export const LoginForm = ({ onSuccess }) => {
     const [showPwd, setShowPwd] = useState(false)
     const [submitting, setSubmitting] = useState('')
 
-    const testUser = {
-        email: 'test@email.com',
-        password: '1234',
-        name: 'usuario de tests'
-    }
-
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const { login } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (email !== testUser.email || password !== testUser.password) { setError('Email o contraseña incorrectos'); return }
         try {
             setSubmitting(true)
-            //llamada al backend
-            await sleep(2000);
+            setError('')
+            const response = await loginService(email, password)
+            login({ email, name: response.name })
             onSuccess?.()
-        }
-        finally {
+        } catch (err) {
+            setError(err.message)
+        } finally {
             setSubmitting(false)
         }
     }

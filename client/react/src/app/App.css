@@ -76,6 +76,7 @@ header img {
   width: 250px;
   background-color: var(--color-primario);
   padding-top: 100px;
+  padding-inline: 15px;
   justify-items: center;
   box-shadow: 2px 0 8px var(--color-primario-borde);
   z-index: 500;
@@ -101,21 +102,6 @@ header img {
   color: white;
   text-decoration: none;
   width: 70%;
-}
-
-.usuario-container {
-  display: flex;
-  align-items: center;
-  gap: 20%;
-  position: absolute;
-  bottom: 20px;
-  font-weight: bold;
-  font-size: large;
-}
-
-.usuario-container img {
-  height: 40px;
-  width: auto;
 }
 
 /* Chat Container */

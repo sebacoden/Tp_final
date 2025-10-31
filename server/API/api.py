@@ -30,10 +30,10 @@ app.add_middleware(
     allow_headers=["*"],   
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "../DB/productos.db")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def get_db_connection():
+def get_db_connection(db_name="productos.db"):
+    DB_PATH = os.path.join(BASE_DIR, "DB", db_name)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
@@ -126,20 +126,20 @@ def ask(question: str):
         conn.close()
 
 class LoginRequest(BaseModel): 
-    username: str
+    email: str
     password: str
 
 @app.post("/login")
 def login(login_request: LoginRequest):
-    conn = get_db_connection()
+    conn = get_db_connection("users.db")
     try:
         cursor = conn.execute(
-            "SELECT * FROM usuarios WHERE username = ? AND password = ?",
-            (login_request.username, login_request.password)
+            "SELECT * FROM usuarios WHERE email = ? AND password = ?",
+            (login_request.email, login_request.password)
         )
         user = cursor.fetchone()
         if user:
-            return {"message": f"Bienvenido {login_request.username}"}
+            return {"name": user['name']}
         else:
             raise HTTPException(status_code=401, detail="Usuario o contraseña incorrectos")
     finally:
@@ -147,22 +147,49 @@ def login(login_request: LoginRequest):
         
 from fastapi import HTTPException
 
+
+class RegisterRequest(BaseModel):
+    email: str
+    name: str
+    password: str
+
+
 @app.post("/register")
-def register(register_request: LoginRequest):
-    conn = get_db_connection()
+def register(register_request: RegisterRequest):
+    conn = get_db_connection("users.db")
     try:
         cursor = conn.execute(
-            "SELECT * FROM usuarios WHERE username = ?",
-            (register_request.username,)
+            "SELECT * FROM usuarios WHERE email = ?",
+            (register_request.email,)
         )
         if cursor.fetchone():
-            raise HTTPException(status_code=400, detail="Usuario ya existe")
+            raise HTTPException(status_code=400, detail="El email ingresado ya se encuentra registrado")
 
         conn.execute(
-            "INSERT INTO usuarios (username, password) VALUES (?, ?)",
-            (register_request.username, register_request.password)  # Para producción: usar hash
+            "INSERT INTO usuarios (email, name, password) VALUES (?, ?, ?)",
+            (register_request.email, register_request.name, register_request.password) 
         )
         conn.commit()
-        return {"message": f"Usuario {register_request.username} creado correctamente"}
+        return {"message": f"Usuario {register_request.name} creado correctamente"}
+    finally:
+        conn.close()
+
+
+class RecoverRequest(BaseModel):
+    email: str
+
+
+@app.post("/recover/verify-email")
+def verify_email(recover_request: RecoverRequest):
+    conn = get_db_connection("users.db")
+    try:
+        cursor = conn.execute(
+            "SELECT * FROM usuarios WHERE email = ?",
+            (recover_request.email,)
+        )
+        if cursor.fetchone():
+            return {"message": "Email verificado correctamente"}
+        else:
+            raise HTTPException(status_code=404, detail="El email no está registrado")
     finally:
         conn.close()
