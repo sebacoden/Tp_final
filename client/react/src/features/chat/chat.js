@@ -12,14 +12,20 @@ export const Chat = () => {
   const enviarMensaje = async (e) => {
     e.preventDefault()
     setEsperarRespuesta(false)
+
+    const nuevoMensajeUsuario = new Mensaje(mensajeAEnviar.contenido, "usuario")
+    setListaMensajes(prev => [...prev, nuevoMensajeUsuario])
+    limpiarInput()
+
     chatService.preguntar(mensajeAEnviar.contenido).then((respuesta) => {
-        const nuevoMensajeUsuario = new Mensaje(mensajeAEnviar.contenido, "usuario")
         const nuevoMensajeBot = new Mensaje(respuesta.data.natural_language_response, "asistente")
-        setListaMensajes([...listaMensajes, nuevoMensajeUsuario, nuevoMensajeBot])
-        limpiarInput()
+        setListaMensajes(prev => [...prev, nuevoMensajeBot])
+
         setEsperarRespuesta(true)
     }).catch((error) => {
-        console.error("Error al enviar el mensaje:", error)
+        const mensajeError = new Mensaje("Lo siento, estamos teniendo problemas conectando con el servidor.", "asistente")
+        setListaMensajes(prev => [...prev, mensajeError])
+
         setEsperarRespuesta(true)
     })
   }
