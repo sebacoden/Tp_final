@@ -3,9 +3,10 @@ export const MensajeTarjeta = ({ mensaje }) => {
     return mensaje.tipo === "usuario" ? "usuario" : "asistente";
   }
 
-  return <div
-        className={`mensaje ${claseMensaje()}`}
-        dangerouslySetInnerHTML={{ __html: mensaje.contenido }}
-></div>
-
+  return (
+    <div
+      className={`mensaje ${claseMensaje()}`}
+      dangerouslySetInnerHTML={{ __html: mensaje.contenido }}
+    ></div>
+  );
 };

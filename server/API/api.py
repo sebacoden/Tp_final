@@ -78,17 +78,19 @@ def ask(question: str):
             "{question}"
 
             Instrucciones CLAVE:
-            1. Si la pregunta busca el producto "más caro", ordena por `pp.precio_base` en orden descendente (`ORDER BY pp.precio_base DESC`).
-            2. Si la pregunta busca el producto con el "mayor descuento", ordena por el porcentaje de descuento en orden descendente (`ORDER BY porcentaje_descuento DESC`).
-            3. Siempre incluye la condición `WHERE pp.precio_base > pp.precio_final` para filtrar productos sin descuento.
-            4. Para búsquedas por nombre de producto, usa `LIKE '%<palabra>%'` (no distinción entre mayúsculas y minúsculas si es posible).
-            5. Devuelve solo las columnas necesarias para responder la pregunta.
-            6. Limita los resultados a un máximo de 10 filas con `LIMIT 10`.
-            7. No incluyas bloques de código Markdown, explicaciones ni comentarios: devuelve solo la consulta SQL limpia.
-            8. Usa alias claros y consistentes (por ejemplo, `pp` para la tabla principal de productos si aplica).
-            9. Si la pregunta no requiere filtro de descuento, omite la condición de `precio_base > precio_final`.
+            1. Solo puedes generar consultas SQL de lectura: **usa exclusivamente SELECT**.
+            - No uses INSERT, UPDATE, DELETE, DROP, CREATE ni ninguna otra instrucción que modifique la base de datos.
+            2. Si el usuario pide algo que no puede resolverse con SELECT, responde con una consulta SELECT vacía o una que no devuelva resultados (por ejemplo: `SELECT 'Operación no permitida' AS error;`).
+            3. Si la pregunta busca el producto "más caro", ordena por `pp.precio_base` en orden descendente (`ORDER BY pp.precio_base DESC`).
+            4. Si la pregunta busca el producto con el "mayor descuento", ordena por el porcentaje de descuento en orden descendente (`ORDER BY porcentaje_descuento DESC`).
+            5. Solo incluye la condición `WHERE pp.precio_base > pp.precio_final` cuando el contexto sea productos con descuento.
+            6. Para búsquedas por nombre de producto, usa `LIKE '%<palabra>%'` (sin distinguir mayúsculas y minúsculas si es posible).
+            7. Devuelve solo las columnas necesarias para responder la pregunta.
+            8. Limita los resultados a un máximo de 10 filas con `LIMIT 10`.
+            9. No incluyas bloques de código Markdown, explicaciones ni comentarios: devuelve solo la consulta SQL limpia.
+            10. Usa alias claros y consistentes (por ejemplo, `pp` para la tabla principal de productos).
 
-            Responde únicamente con la consulta SQL final.
+            Responde únicamente con la consulta SQL final y asegúrate de que comience con la palabra SELECT.
             """
 
         # 3️⃣ Gemini genera la consulta SQL
