@@ -69,21 +69,30 @@ def ask(question: str):
         # 2️⃣ Preparar prompt para que Gemini genere la SQL
         schema_str = "\n".join([f"{t}({', '.join(cols)})" for t, cols in schema.items()])
         prompt_sql = f"""
-        Eres un asistente que ayuda a generar consultas SQL para responder preguntas.
-        Aquí está la estructura de la base de datos:
-        {schema_str}
+            Eres un asistente encargado de generar consultas SQL (SQLite) para responder preguntas de los usuarios.
 
-        Genera una consulta SQL que responda a la siguiente pregunta:
-        "{question}"
+            Estructura de la base de datos:
+            {schema_str}
 
-        Instrucciones CLAVE para generar la SQL (SQLite):
-            1. Cuando la pregunta busca el producto **"más caro"**, la consulta debe ordenar por **precio_base** de forma descendente (`ORDER BY precio_base DESC`).
-            2. Cuando la pregunta busca el producto con el **"mayor descuento"**, la consulta debe ordenar por el cálculo del porcentaje de descuento de forma descendente (`ORDER BY porcentaje_descuento DESC`).
-            3. Siempre incluye la condición `WHERE pp.precio_base > pp.precio_final` para filtrar productos sin descuento.
-            4. Para búsquedas de nombres, usa **LIKE** con comodines (`%`).
-            5. La consulta debe devolver solo las columnas necesarias.
-            6. Pasa la query en crudo, sin bloques de código Markdown ni comentarios.
-        """
+            Pregunta del usuario:
+            "{question}"
+
+            Instrucciones CLAVE:
+            1. Solo puedes generar consultas SQL de lectura: **usa exclusivamente SELECT**.
+            - No uses INSERT, UPDATE, DELETE, DROP, CREATE ni ninguna otra instrucción que modifique la base de datos.
+            2. Si el usuario pide algo que no puede resolverse con SELECT, responde con una consulta SELECT vacía o una que no devuelva resultados (por ejemplo: `SELECT 'Operación no permitida' AS error;`).
+            3. Si la pregunta busca el producto "más caro", ordena por `pp.precio_base` en orden descendente (`ORDER BY pp.precio_base DESC`).
+            4. Si la pregunta busca el producto con el "mayor descuento", ordena por el porcentaje de descuento en orden descendente (`ORDER BY porcentaje_descuento DESC`).
+            5. Solo incluye la condición `WHERE pp.precio_base > pp.precio_final` cuando el contexto sea productos con descuento.
+            6. Para búsquedas por nombre de producto, usa `LIKE '%<palabra>%'` (sin distinguir mayúsculas y minúsculas si es posible).
+            7. Devuelve solo las columnas necesarias para responder la pregunta.
+            8. Limita los resultados a un máximo de 10 filas con `LIMIT 10`.
+            9. No incluyas bloques de código Markdown, explicaciones ni comentarios: devuelve solo la consulta SQL limpia.
+            10. Usa alias claros y consistentes (por ejemplo, `pp` para la tabla principal de productos).
+
+            Responde únicamente con la consulta SQL final y asegúrate de que comience con la palabra SELECT.
+            """
+
         # 3️⃣ Gemini genera la consulta SQL
         response_sql = model.generate_content(prompt_sql)
         sql_query = response_sql.text.strip()
@@ -102,17 +111,31 @@ def ask(question: str):
 
         # 5️⃣ Generar prompt para la respuesta en lenguaje natural
         prompt_nl = f"""
-        El usuario preguntó: "{question}"
-        Los resultados de la base de datos son:
-        {results}
+            El usuario preguntó: "{question}"
+            Los resultados de la base de datos son:
+            {results}
 
-        Instrucciones:
-        - Responde con actitud neutral y clara.
-        - Busca en base al nombre del producto, no categoria.
-        - Responde de manera clara y amigable.
-        - Adapta la longitud según la pregunta.
-        - No uses markdown ni **.
-        """
+            Instrucciones para el asistente:
+            - Responde de forma clara, amable y concisa.
+            - Usa los resultados para listar los productos disponibles.
+            - Usa <br><br> entre cada producto para separar visualmente los ítems.
+            - Formato de salida (ejemplo):
+                ¡Hola! 👋<br>
+                Con $15000, podrías comprar los siguientes productos:<br><br>
+                🛒 Chips COTO X Uni — $160.0<br><br>
+                🍬 LENGUETAZO Tutti Frutti 13g — $235.0<br><br>
+                📄 Papel Glace Flúor X 5 Hojas — $236.62
+
+            - Usa solo un emoji por producto, relacionado con su tipo (ej. alimentos 🍞, dulces 🍬, papelería 📄, etc.).
+            - No uses Markdown, símbolos especiales (** o *), ni tablas.
+            - Si hay muchos productos, muestra solo los más relevantes o los primeros 10.
+            - Si no hay resultados, responde amablemente que no se encontraron productos disponibles.
+            - Mantén un tono amable, simple y natural, como si atendieras a un cliente en un kiosco.
+            - No expliques cómo calculas los resultados ni menciones la base de datos.
+            """
+
+
+
         response_nl = model.generate_content(prompt_nl)
         answer = response_nl.text.strip()
 
