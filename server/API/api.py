@@ -89,6 +89,7 @@ def ask(question: str):
             8. Limita los resultados a un máximo de 10 filas con `LIMIT 10`.
             9. No incluyas bloques de código Markdown, explicaciones ni comentarios: devuelve solo la consulta SQL limpia.
             10. Usa alias claros y consistentes (por ejemplo, `pp` para la tabla principal de productos).
+            11. Puede buscar prodcutos por categoría, subcategoría, rango de precio, nombre, stock, total_ventas.
 
             Responde únicamente con la consulta SQL final y asegúrate de que comience con la palabra SELECT.
             """
