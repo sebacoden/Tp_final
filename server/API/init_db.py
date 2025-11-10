@@ -2,9 +2,9 @@ import sqlite3
 import json
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-json_path = os.path.join(BASE_DIR, "..", "scraping", "productosCOTO.json")
+json_path = os.path.join(BASE_DIR, "scraping", "productosCOTO.json")
 
 def crear_bd_mensajes():
     _base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -34,7 +34,8 @@ with open(json_path, "r", encoding="utf-8") as f:
     productos = json.load(f)
 
 # Crear (o conectar si ya existe) la base
-conn = sqlite3.connect("server/DB/productos.db")
+_db_path = os.path.join(BASE_DIR, "DB", "productos.db")
+conn = sqlite3.connect(_db_path)
 cursor = conn.cursor()
 
 # Crear tabla de productos
