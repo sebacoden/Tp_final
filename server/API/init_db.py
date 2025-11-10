@@ -6,6 +6,23 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 json_path = os.path.join(BASE_DIR, "..", "scraping", "productosCOTO.json")
 
+def crear_bd_mensajes():
+    _base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    _db_path = os.path.join(_base_dir, "DB", "mensajes.db")
+
+    conn = sqlite3.connect(_db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS mensajes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        contenido TEXT NOT NULL,
+        tipo TEXT NOT NULL CHECK(tipo IN ('usuario', 'asistente'))
+    )
+    """)
+    conn.commit()
+    conn.close()
+
 def convertir_precio(precio_str):
     if not precio_str:
         return None
@@ -54,3 +71,6 @@ conn.commit()
 conn.close()
 
 print("Base de datos creada y cargada desde productosCOTO.json ✔")
+
+crear_bd_mensajes()
+print("Base de datos de mensajes creada ✔")
