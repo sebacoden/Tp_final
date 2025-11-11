@@ -32,7 +32,7 @@ app.add_middleware(
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-template_path = os.path.join(BASE_DIR, "template_gemini.md")
+template_path = os.path.join(BASE_DIR, "api", "template_gemini.md")
 with open(template_path, "r", encoding="utf-8") as f:
     template_md = f.read()
 
@@ -116,6 +116,12 @@ def ask(request: AskRequest):
         sql_query = response_sql.text.strip()
         sql_query = sql_query.replace('```sql', '').replace('```', '').strip()
         sql_query = re.sub(r'--.*', '', sql_query).strip()
+        
+        cursor = conn.execute("SELECT DISTINCT categoria, supercategoria FROM productos")
+        categorias_disponibles = cursor.fetchall()
+
+        categorias_list = [f"{row['categoria']} ({row['supercategoria']})" for row in categorias_disponibles]
+        categorias_str = ", ".join(categorias_list)
 
         try:
             cursor = conn.execute(sql_query)
@@ -129,7 +135,16 @@ def ask(request: AskRequest):
             {template_md}
 
             Usuario pregunta: "{question}"
-            Lista de productos disponibles: {results}
+
+            Lista de categorías de productos disponibles en la base de datos:
+            {categorias_str}
+
+            Instrucciones:
+            - Recomienda productos y recetas **usando solo las categorías disponibles**.
+            - Sugiere combinaciones de desayuno, almuerzo, snack y cena.
+            - Prioriza productos que existan en la DB (no inventes productos).
+            - Incluye emojis y separa cada producto con <br><br> para web.
+            - Mantén un tono amable y cercano.
             """
 
         response_nl = model.generate_content(prompt_nl)
