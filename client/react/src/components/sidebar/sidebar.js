@@ -2,9 +2,10 @@ import { useAuth } from "../../data/AuthContext";
 import { ContenedorUsuario } from "../ContenedorUsuario/ContenedorUsuario";
 import { chatService } from "../../data/services/chat-service";
 
-export const Sidebar = ({ estaAbierto }) => {
+export const Sidebar = ({ estaAbierto, abrirPreferencias }) => {
   const { user, logout } = useAuth();
-  
+
+
   const borrarMensajes = async () => {
     try {
       await chatService.borrarMensajes();
@@ -21,7 +22,11 @@ export const Sidebar = ({ estaAbierto }) => {
           <a onClick={borrarMensajes} >Nuevo chat</a>
         </li>
       </ul>
-      <ContenedorUsuario user={user} logout={logout} />
+
+      <div className="sidebar-usuario">
+        {user && (<button className="preferencias-btn" onClick={abrirPreferencias}>Preferencias de consumo</button>)}
+        <ContenedorUsuario user={user} logout={logout} />
+      </div>
     </div>
   );
 };
