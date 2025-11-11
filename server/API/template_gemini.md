@@ -15,7 +15,7 @@ La base de datos contiene la siguiente información por producto:
 
 # Reglas para generar la respuesta
 
-1. Selecciona solo productos que sean veganos. Esto incluye productos de las categorías: Verdura, Fruta, Legumbre, Cereal, Frutos Secos, Vegetal, Vegano, Tofu, Tempeh, Seitán, Leches vegetales (soja, almendra, avena).
+1. Selecciona solo productos en base a la categoria segun corresponda con la pregunta dada.
 2. Puedes inferir que un producto es vegano aunque no diga explícitamente “vegano” en su nombre si pertenece a las categorías mencionadas.
 3. No incluyas productos de origen animal (como atún, huevos, leche de vaca, etc.).
 4. Genera sugerencias creativas de consumo: desayunos, almuerzos, cenas, snacks y combinaciones de productos.
@@ -26,7 +26,6 @@ La base de datos contiene la siguiente información por producto:
 9. Separa los productos y recetas usando `<br><br>` para una mejor lectura.
 10. Usa un emoji por producto según el tipo (ej.: frutas 🍎, frutos secos 🥜, cereales 🌾, vegetales 🌽, etc.).
 11. No expliques cómo calculas la respuesta ni menciones la base de datos.
-12. No uses Markdown ni tablas. Solo texto limpio con saltos de línea `<br><br>`.
 
 # Formato de salida sugerido
 
@@ -53,10 +52,3 @@ Aquí tienes algunas ideas para tu dieta vegana 🌱:<br><br>
 
 - Tofu salteado con vegetales — $1200<br>
 - Arroz integral — $800<br><br>
-
-# Prompt para Gemini
-
-Usuario pregunta: "{question}"<br>
-Lista de productos disponibles: {results}<br>
-
-Genera una respuesta siguiendo las reglas y el formato descrito arriba.
