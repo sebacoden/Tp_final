@@ -32,7 +32,7 @@ app.add_middleware(
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-template_path = os.path.join(BASE_DIR, "template_gemini.md")
+template_path = os.path.join(BASE_DIR, "api", "template_gemini.md")
 with open(template_path, "r", encoding="utf-8") as f:
     template_md = f.read()
 
