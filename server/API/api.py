@@ -32,7 +32,7 @@ app.add_middleware(
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def get_db_connection(db_name="productos.db"):
+def get_db_connection(db_name="productos_completos.db"):
     DB_PATH = os.path.join(BASE_DIR, "DB", db_name)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row

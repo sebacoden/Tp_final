@@ -18,7 +18,7 @@ export const Sidebar = ({ estaAbierto }) => {
     <div className={`sidebar ${estaAbierto ? "open" : ""}`} data-cy="sidebar">
       <ul>
         <li data-cy="abrir-nuevo-chat">
-          <a onClick={borrarMensajes} >Nuevo chat</a>
+          <a onClick={borrarMensajes} >Limpiar chat</a>
         </li>
       </ul>
       <ContenedorUsuario user={user} logout={logout} />
