@@ -42,6 +42,9 @@ conn_old.close()
 conn_new = sqlite3.connect(db_nueva_path)
 cursor_new = conn_new.cursor()
 
+# Eliminar tabla si existe (para evitar conflictos de UNIQUE)
+cursor_new.execute("DROP TABLE IF EXISTS productos")
+
 # Crear tabla nueva
 cursor_new.execute("""
 CREATE TABLE IF NOT EXISTS productos (
