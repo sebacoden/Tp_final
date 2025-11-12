@@ -8,10 +8,10 @@ import re
 from fastapi import HTTPException
 from pydantic import BaseModel
 
-def get_gemini_key_from_default():  
+def get_gemini_key_from_default():  # Esta es la opción que ya existía
     return os.getenv("GEMINI_API_KEY")
 
-def get_gemini_key_from_pool():  
+def get_gemini_key_from_pool():  # Toma una key al azar de un pool en el .env
     keys = os.getenv("GEMINI_KEYS").split(",")
     return random.choice(keys)
 
@@ -32,11 +32,7 @@ app.add_middleware(
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-template_path = os.path.join(BASE_DIR, "api", "template_gemini.md")
-with open(template_path, "r", encoding="utf-8") as f:
-    template_md = f.read()
-
-def get_db_connection(db_name="productos_completos.db"):
+def get_db_connection(db_name="productos.db"):
     DB_PATH = os.path.join(BASE_DIR, "DB", db_name)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -78,6 +74,7 @@ def ask(request: AskRequest):
     model = genai.GenerativeModel("gemini-2.5-flash")
 
     try:
+        # 1️⃣ Obtener estructura de la DB (tablas y columnas)
         cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tablas = [row["name"] for row in cursor.fetchall()]
         schema = {}
@@ -85,6 +82,7 @@ def ask(request: AskRequest):
             cols = conn.execute(f"PRAGMA table_info({t});").fetchall()
             schema[t] = [c[1] for c in cols]
 
+        # 2️⃣ Preparar prompt para que Gemini genere la SQL
         schema_str = "\n".join([f"{t}({', '.join(cols)})" for t, cols in schema.items()])
         prompt_sql = f"""
             Eres un asistente encargado de generar consultas SQL (SQLite) para responder preguntas de los usuarios.
@@ -112,17 +110,13 @@ def ask(request: AskRequest):
             Responde únicamente con la consulta SQL final y asegúrate de que comience con la palabra SELECT.
         """
 
+        # 3️⃣ Gemini genera la consulta SQL
         response_sql = model.generate_content(prompt_sql)
         sql_query = response_sql.text.strip()
         sql_query = sql_query.replace('```sql', '').replace('```', '').strip()
         sql_query = re.sub(r'--.*', '', sql_query).strip()
-        
-        cursor = conn.execute("SELECT DISTINCT categoria, supercategoria FROM productos")
-        categorias_disponibles = cursor.fetchall()
 
-        categorias_list = [f"{row['categoria']} ({row['supercategoria']})" for row in categorias_disponibles]
-        categorias_str = ", ".join(categorias_list)
-
+        # 4️⃣ Ejecutar la consulta SQL generada
         try:
             cursor = conn.execute(sql_query)
             rows = cursor.fetchall()
@@ -131,20 +125,29 @@ def ask(request: AskRequest):
             results = []
             sql_query += f" -- ERROR: {str(e)}"
 
+        # 5️⃣ Generar prompt para la respuesta en lenguaje natural
         prompt_nl = f"""
-            {template_md}
+            El usuario preguntó: "{question}"
+            Los resultados de la base de datos son:
+            {results}
 
-            Usuario pregunta: "{question}"
+            Instrucciones para el asistente:
+            - Responde de forma clara, amable y concisa.
+            - Usa los resultados para listar los productos disponibles.
+            - Usa <br><br> entre cada producto para separar visualmente los ítems.
+            - Formato de salida (ejemplo):
+                ¡Hola! 👋<br>
+                Con $15000, podrías comprar los siguientes productos:<br><br>
+                🛒 Chips COTO X Uni — $160.0<br><br>
+                🍬 LENGUETAZO Tutti Frutti 13g — $235.0<br><br>
+                📄 Papel Glace Flúor X 5 Hojas — $236.62
 
-            Lista de categorías de productos disponibles en la base de datos:
-            {categorias_str}
-
-            Instrucciones:
-            - Recomienda productos y recetas **usando solo las categorías disponibles**.
-            - Sugiere combinaciones de desayuno, almuerzo, snack y cena.
-            - Prioriza productos que existan en la DB (no inventes productos).
-            - Incluye emojis y separa cada producto con <br><br> para web.
-            - Mantén un tono amable y cercano.
+            - Usa solo un emoji por producto, relacionado con su tipo (ej. alimentos 🍞, dulces 🍬, papelería 📄, etc.).
+            - No uses Markdown, símbolos especiales (** o *), ni tablas.
+            - Si hay muchos productos, muestra solo los más relevantes o los primeros 10.
+            - Si no hay resultados, responde amablemente que no se encontraron productos disponibles.
+            - Mantén un tono amable, simple y natural, como si atendieras a un cliente en un kiosco.
+            - No expliques cómo calculas los resultados ni menciones la base de datos.
             """
 
         response_nl = model.generate_content(prompt_nl)
