@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    preferencias TEXT
 )
 """)
 

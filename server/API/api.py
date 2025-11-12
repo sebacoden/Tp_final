@@ -245,3 +245,60 @@ def verify_email(recover_request: RecoverRequest):
             raise HTTPException(status_code=404, detail="El email no está registrado")
     finally:
         conn.close()
+
+
+class PreferenciasRequest(BaseModel):
+    email: str
+    preferencias: dict
+
+
+@app.post("/preferences")
+def guardar_preferencias(preferencias_request: PreferenciasRequest):
+    conn = get_db_connection("users.db")
+    try:
+        import json
+        preferencias_json = json.dumps(preferencias_request.preferencias)
+        
+        cursor = conn.execute(
+            "SELECT * FROM usuarios WHERE email = ?",
+            (preferencias_request.email,)
+        )
+        if not cursor.fetchone():
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        conn.execute(
+            "UPDATE usuarios SET preferencias = ? WHERE email = ?",
+            (preferencias_json, preferencias_request.email)
+        )
+        conn.commit()
+        return {"message": "Preferencias guardadas correctamente"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
+
+@app.get("/preferences/{email}")
+def obtener_preferencias(email: str):
+    conn = get_db_connection("users.db")
+    try:
+        import json
+        cursor = conn.execute(
+            "SELECT preferencias FROM usuarios WHERE email = ?",
+            (email,)
+        )
+        result = cursor.fetchone()
+        if not result:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+        preferencias_json = result['preferencias']
+        if preferencias_json:
+            preferencias = json.loads(preferencias_json)
+        else:
+            preferencias = {}
+        
+        return {"preferencias": preferencias}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
