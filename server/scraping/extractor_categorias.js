@@ -10,7 +10,7 @@ const BASE_QUERY =
   "Nf=product.endDate|GTEQ+1.7584128E12||product.endDate|GTEQ+1.663632E12||product.startDate|LTEQ+1.663632E12||product.startDate|LTEQ+1.7584128E12&Nr=AND(product.language:espa%C3%B1ol,product.sDisp_200:1004,OR(product.siteId:CotoDigital))&Ns=product.TOTALDEVENTAS|1||sku.activePrice|0&format=json";
 
 const CHUNK = 100;         // La cantidad de productos que se iran descargando por request para que no reviente todo.
-const MAX_PRODS = 7900;      // Conte cuantos productos habia en el productosCoTO.json, si se hace un nuevo scraping de proudctosCOTO, revisen si el numero coincide.
+const MAX_PRODS = 9000;      // Conte cuantos productos habia en el productosCoTO.json, si se hace un nuevo scraping de proudctosCOTO, revisen si el numero coincide.
 const REINTENTOS = 3;                 // Reintentos.
 const LIMITE_VACIOS = 5;         // Condicion de parada.
 const DESTINO = "./productos_con_categorias.json";  //Aca se guarda
@@ -71,9 +71,11 @@ function extraerProductos(data) {
       const displayName = attrs["product.displayName"]?.[0] ?? null;
       const category = attrs["product.category"]?.[0] ?? null;
       const LDEPAR = attrs["product.LDEPAR"]?.[0] ?? null;
+      const TOTALDEVENTAS = attrs["product.TOTALDEVENTAS"]?.[0] ?? null;
+      const stock = attrs["sku.quantity"]?.[0] ?? null;
 
       if (displayName) {
-        productos.push({ title: displayName, subcategoria: category, supercategoria: LDEPAR });
+        productos.push({ title: displayName, subcategoria: category, supercategoria: LDEPAR, totaldeventas : TOTALDEVENTAS, stock: stock } );
       }
     }
   }

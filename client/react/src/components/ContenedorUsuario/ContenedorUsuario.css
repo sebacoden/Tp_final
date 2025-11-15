@@ -2,11 +2,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: absolute;
-    bottom: 20px;
     font-weight: bold;
     font-size: large;
-    width: calc(100% - 30px);
+    width: 100%;
+    padding-block: 15px;
+    border-block: .5px solid white;
 }
 
 .usuario-container .foto-usuario {
@@ -16,6 +16,7 @@
 
 .usuario-container p {
     flex-grow: 1;
+    font-size: 16px;
     text-align: center;
 }
 
