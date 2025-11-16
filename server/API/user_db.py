@@ -1,24 +1,31 @@
 import sqlite3
+import os
 
-conn = sqlite3.connect("server/DB/users.db")
+# Obtener ruta absoluta al directorio DB
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, "DB", "users.db")
+
+conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
 # Crear tabla usuarios
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    email TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    password TEXT NOT NULL,
+    preferencias TEXT
 )
 """)
 
 # Insertar usuarios de prueba
 cursor.executemany("""
-INSERT OR IGNORE INTO usuarios (username, password)
-VALUES (?, ?)
+INSERT OR IGNORE INTO usuarios (email, name, password)
+VALUES (?, ?, ?)
 """, [
-    ("admin", "1234"),
-    ("user1", "abcd"),
+    ("admin@example.com", "admin", "1234"),
+    ("user1@example.com", "user1", "abcd"),
 ])
 
 conn.commit()

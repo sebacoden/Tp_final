@@ -1,0 +1,43 @@
+.usuario-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: large;
+    width: 100%;
+    padding-block: 15px;
+    border-block: .5px solid white;
+}
+
+.usuario-container .foto-usuario {
+    height: 40px;
+    width: auto;
+}
+
+.usuario-container p {
+    flex-grow: 1;
+    font-size: 16px;
+    text-align: center;
+}
+
+.usuario-container .link-login:hover {
+    text-decoration: underline;
+    text-shadow: 1px 1px 2px black;
+}
+
+.usuario-container .boton-cerrar-sesion {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: var(--color-secundario);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.usuario-container .boton-cerrar-sesion .icono-cerrar-sesion {
+    height: 25px;
+    width: auto;
+}

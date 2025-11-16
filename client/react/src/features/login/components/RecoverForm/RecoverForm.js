@@ -2,6 +2,7 @@ import { useState } from 'react'
 import '../../shared/FormStyle.css'
 import './RecoverForm.css'
 import { Link } from 'react-router-dom'
+import { verifyEmailService } from '../../../../data/services/auth-service'
 
 export const RecoverForm = () => {
     const [email, setEmail] = useState('')
@@ -10,8 +11,6 @@ export const RecoverForm = () => {
     const [okMsg, setOkMsg] = useState('')
     const [btnMsg, setBtnMsg] = useState('Enviar')
 
-    const sleep = (ms) => new Promise(r => setTimeout(r, ms))
-    
     const clearError = () => error && setError('')
 
     const validate = () => {
@@ -25,20 +24,19 @@ export const RecoverForm = () => {
         setOkMsg('')
         const msg = validate()
         if (msg) { setError(msg); return }
-        setBtnMsg('Enviando...')
-
-
+        setBtnMsg('Verificando...')
 
         try {
             setSubmitting(true)
-            // llamada al backend
-            await sleep(1200)
-
-            setOkMsg('Si el email está registrado, enviaremos un enlace para restablecer su contraseña')
+            await verifyEmailService(email)
+            setOkMsg('Se ha enviado un enlace para restablecer su contraseña')
             setError('')
-
-        } finally {
             setBtnMsg('Enviado')
+        } catch (err) {
+            setError(err.message)
+            setBtnMsg('Enviar')
+        } finally {
+            setSubmitting(false)
         }
     };
 
@@ -47,13 +45,13 @@ export const RecoverForm = () => {
             <h2>Recuperar contraseña</h2>
             <div className='input-container'>
                 <label htmlFor='email'>Email</label>
-                <input type='email' id='email' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value); clearError() }} required />
-                <p id="email-error" className={`form-error ${error ? 'is-visible' : ''}`}>{error || '\u00A0'}</p>
-                <p id="ok-msg" className={`ok-msg ${okMsg ? 'is-visible' : ''}`}>{okMsg || '\u00A0'}</p>  
+                <input type='email' id='email' placeholder='Email' value={email} onChange={(e) => { setEmail(e.target.value); clearError() }} data-cy='recover-email' required />
+                <p id="email-error" className={`form-error ${error ? 'is-visible' : ''}`} data-cy='recover-error'>{error || '\u00A0'}</p>
+                <p id="ok-msg" className={`ok-msg ${okMsg ? 'is-visible' : ''}`} data-cy='recover-success'>{okMsg || '\u00A0'}</p>  
             </div>
-            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} disabled={submitting}>{btnMsg}</button>
+            <button type='submit' className={`form-btn ${submitting ? 'btn-disabled' : ''}`} data-cy='recover-submit' disabled={submitting}>{btnMsg}</button>
             <div className='auth-links'>
-                <Link className='link' to='/auth/login' replace>Iniciar sesión</Link>
+                <Link className='link' to='/auth/login' data-cy='recover-back-link' replace>Iniciar sesión</Link>
             </div>
         </form>
     )

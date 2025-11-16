@@ -2,8 +2,8 @@
 :root {
   --color-primario: #f2539d;
   --color-primario-borde: #ff0000;
-  --color-secundario: #13f850f8;
-  --color-fondo: #74baed;
+  --color-secundario: #29df59;
+  --color-fondo: #aadcff;
 }
 
 html,
@@ -76,6 +76,7 @@ header img {
   width: 250px;
   background-color: var(--color-primario);
   padding-top: 100px;
+  padding-inline: 15px;
   justify-items: center;
   box-shadow: 2px 0 8px var(--color-primario-borde);
   z-index: 500;
@@ -97,25 +98,35 @@ header img {
 }
 
 .sidebar * {
-  margin: 20px 0;
+  /* margin: 20px 0; */
   color: white;
   text-decoration: none;
   width: 70%;
 }
 
-.usuario-container {
-  display: flex;
-  align-items: center;
-  gap: 20%;
-  position: absolute;
-  bottom: 20px;
-  font-weight: bold;
-  font-size: large;
+.sidebar ul li {
+  margin: 20px 0;
 }
 
-.usuario-container img {
-  height: 40px;
-  width: auto;
+.sidebar .sidebar-usuario {
+  position: absolute;
+    bottom: 20px;
+    width: calc(100% - 30px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar .preferencias-btn{
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: var(--color-secundario);
+  font-size: large;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  font-size: 16px;
 }
 
 /* Chat Container */

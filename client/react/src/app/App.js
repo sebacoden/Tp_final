@@ -1,13 +1,15 @@
 import { RouteContextProvider } from '../data/RouteContextProvider';
+import { AuthProvider } from '../data/AuthContext';
 import './App.css';
 import { AppRoutes } from '../routes';
 
 function App() {
-
   return (
-    <RouteContextProvider>
-      <AppRoutes />
-    </RouteContextProvider>
+    <AuthProvider>
+      <RouteContextProvider>
+        <AppRoutes />
+      </RouteContextProvider>
+    </AuthProvider>
   )
 }
 
