@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo "Iniciando FRONTEND y BACKEND..."
+echo "Iniciando FRONT END y BACK END..."
 
 # --- FRONTEND ---
 (
   cd client/react || exit
-  npm run dev
+  npm run start
 ) > frontend.log 2>&1 &
 
 # --- BACKEND ---
