@@ -2,7 +2,7 @@
 echo Iniciando FRONTEND y BACKEND...
 
 REM --- FRONTEND ---
-start "Frontend" cmd /k "cd client\react && npm run dev"
+start "Frontend" cmd /k "cd client\react && npm start"
 
 REM --- BACKEND ---
 start "Backend" cmd /k "cd server\API && python -m uvicorn api:app --reload --port 8000"
